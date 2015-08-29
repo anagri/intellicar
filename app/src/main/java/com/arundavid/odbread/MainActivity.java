@@ -77,108 +77,244 @@ public class MainActivity extends ActionBarActivity {
                     // TODO save deviceAddress
                     //--------------------------------
                     //Log.d("OBDHACK", "22222222222222222-------------: ");
-                    //Log.d("OBDHACK", "1-------------: ");
+                    Log.d("OBDHACK", "1-------------: ");
                     BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
-                    //Log.d("OBDHACK", "2-------------: ");
+                    Log.d("OBDHACK", "2-------------: ");
                     BluetoothDevice device = btAdapter.getRemoteDevice(deviceAddress);
-                    //Log.d("OBDHACK", "3-------------: ");
+                    Log.d("OBDHACK", "3-------------: ");
                     UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");//AA:BB:CC:11:22:33");
 
-                    //Log.d("OBDHACK", "4-------------: ");
+                    Log.d("OBDHACK", "4-------------: ");
 
                     socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
-                    //Log.d("OBDHACK", "5-------------: ");
+                    Log.d("OBDHACK", "5-------------: ");
                     socket.connect();
-                    //Log.d("OBDHACK", "6-------------: ");
+                    Log.d("OBDHACK", "6-------------: ");
                     //-------------------------------------
-                    try{
-                    //Log.d("OBDHACK", "3333333333333333333-------------: ");
-                    new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-                    //Log.d("OBDHACK", "7-------------: ");
-                    new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
-                    //Log.d("OBDHACK", "8-------------: ");
-                    new TimeoutCommand(10).run(socket.getInputStream(), socket.getOutputStream());
-                    //Log.d("OBDHACK", "9-------------: ");
-                    new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            Log.d("OBDHACK", "E: " + e);
-                        }
+                    try {
+                        //Log.d("OBDHACK", "3333333333333333333-------------: ");
+                        new EchoOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+                        Log.d("OBDHACK", "7-------------: ");
+                        new LineFeedOffCommand().run(socket.getInputStream(), socket.getOutputStream());
+                        Log.d("OBDHACK", "8-------------: ");
+                        new TimeoutCommand(10).run(socket.getInputStream(), socket.getOutputStream());
+                        Log.d("OBDHACK", "9-------------: ");
+                        new SelectProtocolCommand(ObdProtocols.AUTO).run(socket.getInputStream(), socket.getOutputStream());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("OBDHACK", "ER: " + e);
+                    }
                     //-------------------------------------------------
                     //Log.d("OBDHACK", "4444444444444444444-------------: ");
-                    LoadCommand loadCommand=new LoadCommand();//04#
-                    AbsoluteLoadCommand absLoadCommand=new AbsoluteLoadCommand();//43#
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.d("OBDHACK", "ER: " + e);
+                }
+                try {
+                    LoadCommand loadCommand = null;
+                    AbsoluteLoadCommand absLoadCommand = null;
+                    OilTempCommand oilTempCommand = null;
+                    ObdCommand coolantTempCommand = null;
+                    RPMCommand rpmCommand = null;
+                    SpeedCommand speedCommand = null;
+                    DistanceTraveledWithMILOnCommand distanceTraveledOn = null;
+                    RuntimeCommand runtimeCommand = null;
+                    FuelLevelCommand fuelLevel = null;
+                    ObdCommand egrErrorCommand = null;
+                    ObdCommand commandedEgrErrorCommand = null;
+                    try {
+                        loadCommand = new LoadCommand();//04#
+                        absLoadCommand = new AbsoluteLoadCommand();//43#
 
-                    OilTempCommand oilTempCommand=new OilTempCommand();
-                    ObdCommand coolantTempCommand=new ObdCommand("01 05") {
-                        @Override
-                        protected void performCalculations() {}
-                        @Override
-                        public String getFormattedResult() {return null;}
-                        @Override
-                        public String getCalculatedResult() {return null;}
-                        @Override
-                        public String getName() {return null;}
-                    };
+                        oilTempCommand = new OilTempCommand();
+                        coolantTempCommand = new ObdCommand("01 05") {
+                            @Override
+                            protected void performCalculations() {
+                            }
 
-                    RPMCommand rpmCommand=new RPMCommand();
+                            @Override
+                            public String getFormattedResult() {
+                                return null;
+                            }
 
-                    SpeedCommand speedCommand = new SpeedCommand();
+                            @Override
+                            public String getCalculatedResult() {
+                                return null;
+                            }
 
-                    DistanceTraveledWithMILOnCommand distanceTraveledOn=new DistanceTraveledWithMILOnCommand();
-                    RuntimeCommand runtimeCommand=new RuntimeCommand();
+                            @Override
+                            public String getName() {
+                                return null;
+                            }
+                        };
 
-                    FuelLevelCommand fuelLevel=new FuelLevelCommand();
+                        rpmCommand = new RPMCommand();
 
+                        speedCommand = new SpeedCommand();
+
+                        distanceTraveledOn = new DistanceTraveledWithMILOnCommand();
+                        runtimeCommand = new RuntimeCommand();
+
+                        fuelLevel = new FuelLevelCommand();
+
+                        egrErrorCommand = new ObdCommand("01 2D") {
+                            @Override
+                            protected void performCalculations() {
+                            }
+
+                            @Override
+                            public String getFormattedResult() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getCalculatedResult() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return null;
+                            }
+                        };
+
+                        commandedEgrErrorCommand = new ObdCommand("01 2D") {
+                            @Override
+                            protected void performCalculations() {
+                            }
+
+                            @Override
+                            public String getFormattedResult() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getCalculatedResult() {
+                                return null;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return null;
+                            }
+                        };
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("OBDHACK", "ER: " + e);
+                    }
                     //ObdMultiCommand obdCommand=new ObdMultiCommand();
 
-                    while (!Thread.currentThread().isInterrupted())
-                    {
-                        try{
+                    while (!Thread.currentThread().isInterrupted()) {
+                        try {
                             loadCommand.run(socket.getInputStream(), socket.getOutputStream());
-                            absLoadCommand.run(socket.getInputStream(), socket.getOutputStream());
 
-                            oilTempCommand.run(socket.getInputStream(), socket.getOutputStream());
-                            coolantTempCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-                            rpmCommand.run(socket.getInputStream(), socket.getOutputStream());
-                            speedCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-                            distanceTraveledOn.run(socket.getInputStream(), socket.getOutputStream());
-                            runtimeCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-                            fuelLevel.run(socket.getInputStream(), socket.getOutputStream());
-
-                            //obdCommand.run(socket.getInputStream(), socket.getOutputStream());
-
-                            // TODO handle commands result
                             Log.d("OBDHACK_RES", "Load: " + loadCommand.getResult());
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E1: " + e);
+                        }
+                        try {
+                            absLoadCommand.run(socket.getInputStream(), socket.getOutputStream());
                             Log.d("OBDHACK_RES", "Abs Load: " + absLoadCommand.getResult());
 
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E2: " + e);
+                        }
+
+                        try {
+                            oilTempCommand.run(socket.getInputStream(), socket.getOutputStream());
                             Log.d("OBDHACK_RES", "Oil temp: " + oilTempCommand.getResult());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E3: " + e);
+                        }
+                        try {
+                            coolantTempCommand.run(socket.getInputStream(), socket.getOutputStream());
+
                             Log.d("OBDHACK_RES", "Coolant temp: " + coolantTempCommand.getResult());
 
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E4: " + e);
+                        }
+                        try {
+                            rpmCommand.run(socket.getInputStream(), socket.getOutputStream());
                             Log.d("OBDHACK_RES", "Rpm: " + rpmCommand.getResult());
-                            Log.d("OBDHACK_RES", "Speed: " + speedCommand.getResult());
 
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E5: " + e);
+                        }
+                        try {
+                            speedCommand.run(socket.getInputStream(), socket.getOutputStream());
+
+                            Log.d("OBDHACK_RES", "Speed: " + speedCommand.getResult());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E6: " + e);
+                        }
+
+                        try {
+                            distanceTraveledOn.run(socket.getInputStream(), socket.getOutputStream());
                             Log.d("OBDHACK_RES", "Distance since on: " + distanceTraveledOn.getResult());
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E7: " + e);
+                        }
+
+                        try {
+                            runtimeCommand.run(socket.getInputStream(), socket.getOutputStream());
+
                             Log.d("OBDHACK_RES", "Runtime since start: " + runtimeCommand.getResult());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E8: " + e);
+                        }
+
+                        try {
+                            fuelLevel.run(socket.getInputStream(), socket.getOutputStream());
 
                             Log.d("OBDHACK_RES", "Fuel level: " + fuelLevel.getResult());
-
-                            //Log.d("OBDHACK_RES", "Obd data: " + obdCommand.getResult());
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             e.printStackTrace();
-                            Log.d("OBDHACK", "E: " + e);
+                            Log.d("OBDHACK", "E9: " + e);
                         }
+
+                        try {
+                            egrErrorCommand.run(socket.getInputStream(), socket.getOutputStream());
+                            Log.d("OBDHACK_RES", "Egr err: " + egrErrorCommand.getResult());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E10: " + e);
+                        }
+                        try {
+                            commandedEgrErrorCommand.run(socket.getInputStream(), socket.getOutputStream());
+
+                            Log.d("OBDHACK_RES", "Commanded egr err: " + commandedEgrErrorCommand.getResult());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("OBDHACK", "E11: " + e);
+                        }
+                        //obdCommand.run(socket.getInputStream(), socket.getOutputStream());
+
+
+                        //Log.d("OBDHACK_RES", "Obd data: " + obdCommand.getResult());
+
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     Log.d("OBDHACK", "E: " + e);
                 }
                 //---------------------------------------------
             }
-        });
+            });
+
 
         alertDialog.setTitle("Choose Bluetooth device");
         alertDialog.show();
