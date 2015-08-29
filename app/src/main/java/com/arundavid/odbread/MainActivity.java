@@ -5,8 +5,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,9 +34,14 @@ import com.github.pires.obd.commands.protocol.SelectProtocolCommand;
 import com.github.pires.obd.commands.protocol.TimeoutCommand;
 import com.github.pires.obd.enums.ObdProtocols;
 
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.UUID;
+
 
 public class MainActivity extends ActionBarActivity {
     BluetoothSocket socket;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +52,9 @@ public class MainActivity extends ActionBarActivity {
 
         BluetoothAdapter btAdapter = BluetoothAdapter.getDefaultAdapter();
         Set pairedDevices = btAdapter.getBondedDevices();
-        if (pairedDevices.size() > 0)
-        {
-            for (Object device : pairedDevices)
-            {
-                BluetoothDevice bdevice= (BluetoothDevice)device;
+        if (pairedDevices.size() > 0) {
+            for (Object device : pairedDevices) {
+                BluetoothDevice bdevice = (BluetoothDevice) device;
                 deviceStrs.add(bdevice.getName() + "\n" + bdevice.getAddress());
                 devices.add(bdevice.getAddress());
             }
@@ -63,11 +66,9 @@ public class MainActivity extends ActionBarActivity {
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.select_dialog_singlechoice,
                 deviceStrs.toArray(new String[deviceStrs.size()]));
 
-        alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener()
-        {
+        alertDialog.setSingleChoiceItems(adapter, -1, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 try {
                     //Log.d("OBDHACK", "init-------------: ");
                     dialog.dismiss();
@@ -184,7 +185,6 @@ public class MainActivity extends ActionBarActivity {
 
 
     }
-
 
 
     @Override

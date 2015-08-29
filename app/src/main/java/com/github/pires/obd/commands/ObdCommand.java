@@ -1,5 +1,7 @@
 package com.github.pires.obd.commands;
 
+import android.util.Log;
+
 import com.github.pires.obd.exceptions.*;
 
 import java.io.IOException;
@@ -193,6 +195,7 @@ public abstract class ObdCommand {
      */
         //kills multiline.. rawData = rawData.substring(rawData.lastIndexOf(13) + 1);
         rawData = rawData.replaceAll("\\s", "");//removes all [ \t\n\x0B\f\r]
+        Log.d("OBDHACK", rawData);
     }
 
     void checkForErrors() {
