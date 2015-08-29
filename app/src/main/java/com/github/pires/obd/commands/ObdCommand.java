@@ -131,7 +131,7 @@ public abstract class ObdCommand {
         readRawData(in);
         checkForErrors();
         fillBuffer();
-        performCalculations();
+//        performCalculations();
     }
 
     /**
